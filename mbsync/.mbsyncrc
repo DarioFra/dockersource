@@ -1,0 +1,39 @@
+ # The IMAP server you wish to copy mails from.
+IMAPAccount source
+Host mail.fromdomain.se
+User someuser1
+Pass somepass1 
+SSLType IMAPS
+#SSLVersions TLSv1
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+ # The IMAP server you wish to copy mails to.
+IMAPAccount target
+Host mail.todomain.se
+User someuser2
+Pass somepass2
+SSLType IMAPS
+#SSLVersions TLSv1.2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# Link IMAP server to remote used below.
+IMAPStore my-source
+Account source
+
+# Link IMAP server to remote used below.
+IMAPStore my-target
+Account target
+
+ # The local storage we'll be using. Note the trailing slash at the end of the Path!
+#MaildirStore my-local
+#Path ~/.mail/my/
+#Inbox ~/.mail/my/Inbox
+
+ # This is where the magic happens. Note Sync is set to 'Pull' now -- we'll set it to 'Push' later!
+Channel my-channel
+Master :my-source:
+Slave :my-target:
+Patterns *
+Create Both
+Sync Pull
+#SyncState *

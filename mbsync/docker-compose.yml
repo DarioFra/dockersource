@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  # Core service
+  mbsync:
+    image: dariofr/mbsync:v1.0
+    restart: always
+    volumes:
+      - "/mbsync/root:/root"
+    extra_hosts:
+     - "mail.somehost.se:192.168.8.201"
+     - "mail.someother.se:192.168.8.115"
+    command: /bin/bash --init-file /mbinit.sh
+
