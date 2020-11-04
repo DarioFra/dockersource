@@ -1,0 +1,179 @@
+server {
+    listen 80;
+    server_name codebee.se franceschi.se *.codebee.se *.netrocket.se *.franceschi.se *.techbee.se;
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+#    location / {
+#      root /var/www/nginx;
+#    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name codebee.se;
+    ssl_certificate /etc/letsencrypt/live/codebee.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/codebee.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/codebee.access.log  main;
+
+    location / {
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+      #      proxy_set_header Host $http_host;
+      #        proxy_set_header Host mail.techbee.se;
+      #        proxy_ssl_name mail.techbee.se;
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name zzz.codebee.se;
+    ssl_certificate /etc/letsencrypt/live/zzz.codebee.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/zzz.codebee.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/zzz.codebee.access.log  main;
+
+    location / {
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name www.codebee.se;
+    ssl_certificate /etc/letsencrypt/live/www.codebee.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.codebee.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/www.codebee.access.log  main;
+
+    location / {
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
+# www.franceschi.se
+server {
+    listen 443 ssl;
+    server_name www.franceschi.se;
+    ssl_certificate /etc/letsencrypt/live/www.franceschi.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/www.franceschi.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/www.franceschi.access.log  main;
+
+    location / {
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_pass https://www.franceschi.se:8443/admin;
+    }
+}
+# franceschi.se
+server {
+    listen 443 ssl;
+    server_name franceschi.se;
+    ssl_certificate /etc/letsencrypt/live/franceschi.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/franceschi.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/franceschi.access.log  main;
+
+    location / {
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
+# mail.techbee.se
+server {
+    listen 443 ssl;
+    server_name mail.techbee.se;
+    ssl_certificate /etc/letsencrypt/live/mail.techbee.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mail.techbee.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/techbee.access.log  main;
+
+    location / {
+        proxy_set_header Host mail.techbee.se;
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_set_header Host mail.techbee.se;
+        proxy_ssl_name mail.techbee.se;
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_set_header Host mail.techbee.se;
+        proxy_ssl_name mail.techbee.se;
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
+# mail.codebee.se
+server {
+    listen 443 ssl;
+    server_name mail.codebee.se;
+    ssl_certificate /etc/letsencrypt/live/mail.codebee.se/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/mail.codebee.se/privkey.pem;
+
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    access_log  /var/log/nginx/techbee.access.log  main;
+
+    location / {
+        proxy_set_header Host mail.codebee.se;
+        proxy_pass http://192.168.0.11:8080;
+    }
+    location /webmail {
+        proxy_set_header Host mail.codebee.se;
+        proxy_ssl_name mail.codebee.se;
+        proxy_pass https://192.168.0.20:8443/webmail;
+    }
+    location /admin {
+        proxy_set_header Host mail.codebee.se;
+        proxy_ssl_name mail.codebee.se;
+        proxy_pass https://192.168.0.20:8443/admin;
+    }
+}
